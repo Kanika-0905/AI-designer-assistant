@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Designer - Advanced</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo { color: white; font-size: 1.5rem; font-weight: bold; }
+        
+        .nav-links { display: flex; gap: 2rem; }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section.active { display: block; }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .category-options {
+            display: none;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .category-options.active { display: block; }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .result {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .result img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .budget-display {
+            background: #e8f5e8;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-weight: bold;
+            color: #2d5a2d;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">AI Designer Pro</div>
+        <div class="nav-links">
+            <a class="nav-link active" onclick="showSection('generate')">Generate</a>
+            <a class="nav-link" onclick="showSection('collections')">Collections</a>
+            <a class="nav-link" onclick="showSection('profile')">Profile</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Generate Section -->
+        <div id="generate" class="section active">
+            <h2>Generate Custom Design</h2>
+            
+            <div class="form-group">
+                <label>Design Prompt</label>
+                <input type="text" id="prompt" placeholder="Describe your design idea..." value="elegant evening dress">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category" onchange="showCategoryOptions()">
+                        <option value="dress">Dress</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="home_decor">Home Decor</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Budget Range</label>
+                    <select id="budget" onchange="updateBudgetDisplay()">
+                        <option value="low">Budget Friendly ($50-200)</option>
+                        <option value="medium">Mid Range ($200-800)</option>
+                        <option value="high">Premium ($800-2000)</option>
+                        <option value="luxury">Luxury ($2000+)</option>
+                    </select>
+                    <div id="budgetDisplay" class="budget-display">Budget: $50-200</div>
+                </div>
+            </div>
+
+            <!-- Dress Options -->
+            <div id="dressOptions" class="category-options active">
+                <h4>Dress Specifications</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fabric Type</label>
+                        <select id="fabricType">
+                            <option value="silk">Silk</option>
+                            <option value="cotton">Cotton</option>
+                            <option value="chiffon">Chiffon</option>
+                            <option value="satin">Satin</option>
+                            <option value="lace">Lace</option>
+                            <option value="velvet">Velvet</option>
+                            <option value="tulle">Tulle</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Style</label>
+                        <select id="dressStyle">
+                            <option value="a-line">A-Line</option>
+                            <option value="mermaid">Mermaid</option>
+                            <option value="ball-gown">Ball Gown</option>
+                            <option value="sheath">Sheath</option>
+                            <option value="wrap">Wrap Dress</option>
+                            <option value="maxi">Maxi</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jewelry Options -->
+            <div id="jewelryOptions" class="category-options">
+                <h4>Jewelry Specifications</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Stone Type</label>
+                        <select id="stoneType">
+                            <option value="diamond">Diamond</option>
+                            <option value="ruby">Ruby</option>
+                            <option value="sapphire">Sapphire</option>
+                            <option value="emerald">Emerald</option>
+                            <option value="pearl">Pearl</option>
+                            <option value="amethyst">Amethyst</option>
+                            <option value="topaz">Topaz</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Metal Type</label>
+                        <select id="metalType">
+                            <option value="gold">Gold</option>
+                            <option value="silver">Silver</option>
+                            <option value="platinum">Platinum</option>
+                            <option value="rose-gold">Rose Gold</option>
+                            <option value="white-gold">White Gold</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Jewelry Style</label>
+                    <select id="jewelryStyle">
+                        <option value="classic">Classic</option>
+                        <option value="modern">Modern</option>
+                        <option value="vintage">Vintage</option>
+                        <option value="minimalist">Minimalist</option>
+                        <option value="statement">Statement</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Home Decor Options -->
+            <div id="homeDecorOptions" class="category-options">
+                <h4>Home Decor Specifications</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Material</label>
+                        <select id="materialType">
+                            <option value="wood">Wood</option>
+                            <option value="metal">Metal</option>
+                            <option value="fabric">Fabric</option>
+                            <option value="glass">Glass</option>
+                            <option value="ceramic">Ceramic</option>
+                            <option value="leather">Leather</option>
+                            <option value="marble">Marble</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Room Type</label>
+                        <select id="roomType">
+                            <option value="living-room">Living Room</option>
+                            <option value="bedroom">Bedroom</option>
+                            <option value="kitchen">Kitchen</option>
+                            <option value="bathroom">Bathroom</option>
+                            <option value="office">Office</option>
+                            <option value="dining-room">Dining Room</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Decor Style</label>
+                    <select id="decorStyle">
+                        <option value="modern">Modern</option>
+                        <option value="traditional">Traditional</option>
+                        <option value="scandinavian">Scandinavian</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="bohemian">Bohemian</option>
+                        <option value="minimalist">Minimalist</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="generateAdvancedDesign()">Generate Custom Design</button>
+            
+            <div id="generateResult" class="result"></div>
+        </div>
+
+        <!-- Collections Section -->
+        <div id="collections" class="section">
+            <h2>My Collections</h2>
+            <div id="collectionsContent">Loading collections...</div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile" class="section">
+            <h2>Profile</h2>
+            <div id="profileContent">Loading profile...</div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(sectionName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showCategoryOptions() {
+            const category = document.getElementById('category').value;
+            
+            // Hide all category options
+            document.querySelectorAll('.category-options').forEach(opt => opt.classList.remove('active'));
+            
+            // Show selected category options
+            document.getElementById(category + 'Options').classList.add('active');
+        }
+
+        function updateBudgetDisplay() {
+            const budget = document.getElementById('budget').value;
+            const budgetRanges = {
+                'low': '$50-200',
+                'medium': '$200-800',
+                'high': '$800-2000',
+                'luxury': '$2000+'
+            };
+            
+            document.getElementById('budgetDisplay').textContent = 'Budget: ' + budgetRanges[budget];
+        }
+
+        async function generateAdvancedDesign() {
+            const prompt = document.getElementById('prompt').value;
+            const category = document.getElementById('category').value;
+            const budget = document.getElementById('budget').value;
+            const resultDiv = document.getElementById('generateResult');
+            
+            if (!prompt.trim()) {
+                alert('Please enter a design prompt');
+                return;
+            }
+            
+            // Get category-specific options
+            let specifications = { budget };
+            
+            if (category === 'dress') {
+                specifications.fabric = document.getElementById('fabricType').value;
+                specifications.style = document.getElementById('dressStyle').value;
+            } else if (category === 'jewelry') {
+                specifications.stone = document.getElementById('stoneType').value;
+                specifications.metal = document.getElementById('metalType').value;
+                specifications.style = document.getElementById('jewelryStyle').value;
+            } else if (category === 'home_decor') {
+                specifications.material = document.getElementById('materialType').value;
+                specifications.room = document.getElementById('roomType').value;
+                specifications.style = document.getElementById('decorStyle').value;
+            }
+            
+            resultDiv.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">Generating your custom design...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompt, 
+                        category, 
+                        specifications 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <h3>Generated Custom Design</h3>
+                        <img src="${data.image}" alt="Generated design" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);">
+                        <p>${data.message}</p>
+                        <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; text-align: left;">
+                            <h4>Design Specifications:</h4>
+                            <p><strong>Category:</strong> ${category.replace('_', ' ').toUpperCase()}</p>
+                            <p><strong>Budget:</strong> ${budget.toUpperCase()}</p>
+                            ${Object.entries(specifications).map(([key, value]) => 
+                                key !== 'budget' ? `<p><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value.replace('-', ' ')}</p>` : ''
+                            ).join('')}
+                        </div>
+                        <button style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; margin-top: 1rem; cursor: pointer;" onclick="downloadDesign('${data.design_id || 'temp'}')">
+                            Download Design
+                        </button>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">${data.message}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<p style="color: red;">Connection failed. Check server.</p>';
+            }
+        }
+
+        function downloadDesign(designId) {
+            alert('Download feature - Design ID: ' + designId);
+        }
+
+        // Initialize
+        showCategoryOptions();
+        updateBudgetDisplay();
+    </script>
+</body>
+</html>
